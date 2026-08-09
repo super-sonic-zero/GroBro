@@ -371,7 +371,7 @@ class Client:
                 self._client.publish(topic, smart_meter["data"], retain=PUBLISH_SENSORS_RETAINED)
                 return
 
-            # NOAH/NEXA-specific message types (FE19 config, 0103 holding regs, etc.)
+            # NOAH/NEXA-specific message types (FE19 config, etc.)
             noah_msg = parser.parse_noah_message(unscrambled)
             if noah_msg and noah_msg.get("message_type") == 0xFE19:
                 if device_id.startswith("0PVP") or device_id.startswith("0HVR"):

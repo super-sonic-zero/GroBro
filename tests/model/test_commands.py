@@ -128,6 +128,7 @@ MODBUS_ROUNDTRIP_FILES = [
     ("NeoSetOutputPowerLimit.bin", GrowattModbusFunctionSingle),
     ("NeoReadInputRegisters.bin", GrowattModbusMessage),
     ("NeoReadSingleRegister_3.bin", GrowattModbusMessage),
+    ("NoahType0103_HoldingRegs.bin", GrowattModbusMessage),
 ]
 
 MODBUS_PARSE_FILES = [
@@ -224,15 +225,6 @@ def test_noah_preset_multiple_charge_limit():
     result = parser.parse_noah_message(unscrambled)
     assert result is not None
     assert result["message_type"] in (0x0110, 0x0111)
-
-
-def test_noah_type0103_holding_registers():
-    data = (DATA_DIR / "NoahType0103_HoldingRegs.bin").read_bytes()
-    unscrambled = parser.unscramble(data)
-    result = parser.parse_noah_0103(unscrambled)
-    assert result["message_type"] == 0x0103
-    assert result["device_id"] == NOAH_TEST_DEVICE_ID
-    assert result["register_count"] > 0
 
 
 def test_noah_type0110_response():
