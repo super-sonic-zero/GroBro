@@ -411,14 +411,16 @@ class Client:
                     LOG.info("Modbus message from unknown device type: %s", device_id)
                     return
 
-                if (
-                    modbus_message.function
-                    == GrowattModbusFunction.READ_SINGLE_REGISTER
+                if modbus_message.function in (
+                    GrowattModbusFunction.READ_SINGLE_REGISTER,
+                    GrowattModbusFunction.READ_HOLDING_REGISTER,
                 ):
                     state = HomeAssistantHoldingRegisterInput(device_id=modbus_device_id)
                     
                     for name, register in known_registers.holding_registers.items():
                         data_raw = modbus_message.get_data(register.growatt.position)
+                        if data_raw is None:
+                            continue
                         value = register.growatt.data.parse(data_raw)
                         if value is None:
                             continue
